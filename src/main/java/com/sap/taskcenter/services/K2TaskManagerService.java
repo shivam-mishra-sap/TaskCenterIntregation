@@ -2,6 +2,7 @@ package com.sap.taskcenter.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ public class K2TaskManagerService {
     @Autowired
     private K2MappingService k2MappingService;
 
-    public List<Task> getTasks() {
+    public Map<String,List<Task>> getTasks() {
 
         ApiResponse response = webClient.get().uri("/changes?realm=123/")
                 .retrieve()
@@ -33,24 +34,27 @@ public class K2TaskManagerService {
             throw new RuntimeException("Failed to fetch response from K2 System");
         }
 
-        System.out.println(response);
+        // System.out.println(response);
 
         return k2MappingService.mapK2ResponseToTask(response.getValue());
         
     }
 
-    public List<TaskDefinition> getTaskDefinitions() {
+    public Map<String,List<TaskDefinition>> getTaskDefinitions() {
 
-        List<TaskDefinition> taskDefinitions = new ArrayList<>();
-        TaskDefinition task1 = new TaskDefinition();
-        TaskDefinition task2 = new TaskDefinition();
-        TaskDefinition task3 = new TaskDefinition();
+        ApiResponse response = webClient.get().uri("/changes?realm=123/")
+                .retrieve()
+                .bodyToMono(ApiResponse.class)
+                .block();
 
-        taskDefinitions.add(task1);
-        taskDefinitions.add(task2);
-        taskDefinitions.add(task3);
+        if (response == null) {
+            throw new RuntimeException("Failed to fetch response from K2 System");
+        }
 
-        return taskDefinitions;
+        // System.out.println(response);
+
+        return k2MappingService.mapK2ResponseToTaskDefination(response.getValue());
+
     }
 
 }

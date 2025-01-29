@@ -10,7 +10,7 @@ import com.sap.taskcenter.model.TaskDefinitions.Enums.ReasonRequired;
 public class ResponseDefinition {
 
     private String code;
-    private LocalizedText name;
+    private LocalizedText[] name;
     private Nature nature;
     private CommentRequired commentRequired;
     private ReasonRequired reasonRequired;
@@ -25,11 +25,11 @@ public class ResponseDefinition {
         this.code = code;
     }
 
-    public LocalizedText getName() {
+    public LocalizedText[] getName() {
         return name;
     }
 
-    public void setName(LocalizedText name) {
+    public void setName(LocalizedText[] name) {
         this.name = name;
     }
 

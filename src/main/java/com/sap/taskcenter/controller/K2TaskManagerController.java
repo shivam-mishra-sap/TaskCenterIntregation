@@ -1,6 +1,7 @@
 package com.sap.taskcenter.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +21,7 @@ public class K2TaskManagerController {
     private K2TaskManagerService k2TaskManagerService;
 
     @GetMapping("/tasks")
-    public List<Task> getTasks(@RequestParam(name = "modifiedAfter", required = true) String modifiedAfter,
+    public Map<String,List<Task>> getTasks(@RequestParam(name = "modifiedAfter", required = true) String modifiedAfter,
             @RequestParam(name = "$top") int top,
             @RequestParam(name = "languages", required = true) String languages) {
 
@@ -28,7 +29,7 @@ public class K2TaskManagerController {
     }
 
     @GetMapping("/taskDefinitions")
-    public List<TaskDefinition> getTaskDefinitions(@RequestParam(name = "$top") int top,
+    public Map<String,List<TaskDefinition>> getTaskDefinitions(@RequestParam(name = "$top") int top,
             @RequestParam(name = "$skip") int skip,
             @RequestParam(name = "languages", required = true) String languages) {
 
