@@ -2,13 +2,19 @@ package com.sap.taskcenter.model.TaskDefinitions;
 
 public class LocalizedText {
 
-    private LanguageCode languageCode;
+    private String languageCode;
     private String text;
     private boolean isDefault;
 
     @Override
     public String toString() {
         return "LocalizedText [languageCode=" + languageCode + ", text=" + text + ", isDefault=" + isDefault + "]";
+    }
+
+    public LocalizedText(String languageCode, String text, boolean isDefault) {
+        this.languageCode = languageCode;
+        this.text = text;
+        this.isDefault = isDefault;
     }
 
     public String getText() {
@@ -27,11 +33,11 @@ public class LocalizedText {
         this.isDefault = isDefault;
     }
 
-    public LanguageCode getLanguageCode() {
+    public String getLanguageCode() {
         return languageCode;
     }
 
-    public void setLanguageCode(LanguageCode languageCode) {
+    public void setLanguageCode(String languageCode) {
         this.languageCode = languageCode;
     }
 

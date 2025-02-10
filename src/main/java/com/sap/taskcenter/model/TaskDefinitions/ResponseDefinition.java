@@ -2,7 +2,6 @@ package com.sap.taskcenter.model.TaskDefinitions;
 
 import java.util.List;
 
-import com.sap.taskcenter.model.TaskDefinitions.Enums.Capabilities;
 import com.sap.taskcenter.model.TaskDefinitions.Enums.CommentRequired;
 import com.sap.taskcenter.model.TaskDefinitions.Enums.Nature;
 import com.sap.taskcenter.model.TaskDefinitions.Enums.ReasonRequired;
@@ -10,12 +9,28 @@ import com.sap.taskcenter.model.TaskDefinitions.Enums.ReasonRequired;
 public class ResponseDefinition {
 
     private String code;
-    private LocalizedText name;
+    private LocalizedText[] name;
     private Nature nature;
     private CommentRequired commentRequired;
     private ReasonRequired reasonRequired;
     private List<ReasonDefinition> possibleReasons;
     private Capabilities capabilities;
+
+    
+
+    public ResponseDefinition(String code, LocalizedText[] name, Nature nature,
+            CommentRequired commentRequired,
+            ReasonRequired reasonRequired,
+            List<ReasonDefinition> possibleReasons,
+            Capabilities capabilities) {
+        this.code = code;
+        this.name = name;
+        this.nature = nature;
+        this.commentRequired = commentRequired;
+        this.reasonRequired = reasonRequired;
+        this.possibleReasons = possibleReasons;
+        this.capabilities = capabilities;
+    }
 
     public String getCode() {
         return code;
@@ -25,11 +40,11 @@ public class ResponseDefinition {
         this.code = code;
     }
 
-    public LocalizedText getName() {
+    public LocalizedText[] getName() {
         return name;
     }
 
-    public void setName(LocalizedText name) {
+    public void setName(LocalizedText[] name) {
         this.name = name;
     }
 

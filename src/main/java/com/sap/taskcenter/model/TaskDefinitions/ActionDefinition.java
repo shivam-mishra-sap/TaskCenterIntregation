@@ -2,7 +2,6 @@ package com.sap.taskcenter.model.TaskDefinitions;
 
 import java.util.List;
 
-import com.sap.taskcenter.model.TaskDefinitions.Enums.Capabilities;
 import com.sap.taskcenter.model.TaskDefinitions.Enums.CommentRequired;
 import com.sap.taskcenter.model.TaskDefinitions.Enums.Nature;
 import com.sap.taskcenter.model.TaskDefinitions.Enums.ReasonRequired;

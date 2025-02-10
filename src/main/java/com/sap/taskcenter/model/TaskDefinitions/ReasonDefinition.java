@@ -4,7 +4,7 @@ import java.util.List;
 
 public class ReasonDefinition {
     private String code;
-    private List<LocalizedText> name;
+    private LocalizedText[] name;
 
     public String getCode() {
         return code;
@@ -14,11 +14,11 @@ public class ReasonDefinition {
         this.code = code;
     }
 
-    public List<LocalizedText> getName() {
+    public LocalizedText[] getName() {
         return name;
     }
 
-    public void setName(List<LocalizedText> name) {
+    public void setName(LocalizedText[] name) {
         this.name = name;
     }
 }

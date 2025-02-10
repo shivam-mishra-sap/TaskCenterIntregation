@@ -1,13 +1,14 @@
 package com.sap.taskcenter.services;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.sap.taskcenter.model.Request.ActionPayload;
 import com.sap.taskcenter.model.Response.ApiResponse;
 import com.sap.taskcenter.model.TaskDefinitions.TaskDefinition;
 import com.sap.taskcenter.model.Tasks.Task;
@@ -22,7 +23,7 @@ public class K2TaskManagerService {
     @Autowired
     private K2MappingService k2MappingService;
 
-    public List<Task> getTasks() {
+    public Map<String, List<Task>> getTasks() {
 
         ApiResponse response = webClient.get().uri("/changes?realm=123/")
                 .retrieve()
@@ -33,25 +34,45 @@ public class K2TaskManagerService {
             throw new RuntimeException("Failed to fetch response from K2 System");
         }
 
-        System.out.println(response);
-        ;
-
         return k2MappingService.mapK2ResponseToTask(response.getValue());
 
     }
 
-    public List<TaskDefinition> getTaskDefinitions() {
+    public Map<String, List<TaskDefinition>> getTaskDefinitions() {
 
-        List<TaskDefinition> taskDefinitions = new ArrayList<>();
-        TaskDefinition task1 = new TaskDefinition();
-        TaskDefinition task2 = new TaskDefinition();
-        TaskDefinition task3 = new TaskDefinition();
+        ApiResponse response = webClient.get().uri("/changes?realm=123/")
+                .retrieve()
+                .bodyToMono(ApiResponse.class)
+                .block();
 
-        taskDefinitions.add(task1);
-        taskDefinitions.add(task2);
-        taskDefinitions.add(task3);
+        if (response == null) {
+            throw new RuntimeException("Failed to fetch response from K2 System");
+        }
 
-        return taskDefinitions;
+        return k2MappingService.mapK2ResponseToTaskDefination(response.getValue());
+
+    }
+
+    public Map<String, List<Task>> sendActionRequest(ActionPayload actionPayload) {
+
+        ApiResponse response = webClient.post()
+                .uri("/action?")
+                // .header("Authorization"," ")
+                // .header("APIKey", " ")
+                .header("realm", "coe-india-t")
+                .header("user", "TEST3PUSER1")
+                .header("passwordadapter", "ThirdPartyUser")
+                .body(BodyInserters.fromValue(actionPayload))
+                .retrieve()
+                .bodyToMono(ApiResponse.class)
+                .block();
+
+        if (response == null) {
+            throw new RuntimeException("Failed to fetch response from K2 System, Error : ");
+        }
+
+        return k2MappingService.mapK2ResponseToTask(response.getValue());
+
     }
 
 }

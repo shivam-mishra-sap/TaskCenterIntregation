@@ -1,5 +1,6 @@
 package com.sap.taskcenter.model.TaskDefinitions;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class CustomAttributeDefinition {
@@ -7,13 +8,21 @@ public class CustomAttributeDefinition {
     private String code;
     private String type;
     private String format;
-    private List<LocalizedText> name;
+    private LocalizedText[] name;
     private int rank;
+
+    public CustomAttributeDefinition(String code, String type, String format, LocalizedText[] name, int rank) {
+        this.code = code;
+        this.type = type;
+        this.format = format;
+        this.name = name;
+        this.rank = rank;
+    }
 
     @Override
     public String toString() {
-        return "CustomAttributeDefinition [code=" + code + ", type=" + type + ", format=" + format + ", name=" + name
-                + ", rank=" + rank + "]";
+        return "CustomAttributeDefinition [code=" + code + ", type=" + type + ", format=" + format + ", name="
+                + Arrays.toString(name) + ", rank=" + rank + "]";
     }
 
     public String getCode() {
@@ -40,11 +49,11 @@ public class CustomAttributeDefinition {
         this.format = format;
     }
 
-    public List<LocalizedText> getName() {
+    public LocalizedText[] getName() {
         return name;
     }
 
-    public void setName(List<LocalizedText> name) {
+    public void setName(LocalizedText[] name) {
         this.name = name;
     }
 
@@ -55,5 +64,7 @@ public class CustomAttributeDefinition {
     public void setRank(int rank) {
         this.rank = rank;
     }
+
+    
 
 }

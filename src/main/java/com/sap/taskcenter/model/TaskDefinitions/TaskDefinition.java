@@ -2,8 +2,6 @@ package com.sap.taskcenter.model.TaskDefinitions;
 
 import java.util.List;
 
-import com.sap.taskcenter.model.TaskDefinitions.Enums.Capabilities;
-
 public class TaskDefinition {
 
     private String urn;
@@ -11,11 +9,11 @@ public class TaskDefinition {
     private String applicationInstanceId;
     private String tenantId;
     private String localId;
-    private List<LocalizedText> name;
+    private LocalizedText[] name;
     private List<ResponseDefinition> possibleResponses;
     private List<ActionDefinition> possibleActions;
     private List<CustomAttributeDefinition> customAttributes;
-    private List<Capabilities> capabilities;
+    private Capabilities[] capabilities;
     private TaskDetailsSettings taskDetailsSettings;
 
     public String getUrn() {
@@ -58,11 +56,11 @@ public class TaskDefinition {
         this.localId = localId;
     }
 
-    public List<LocalizedText> getName() {
+    public LocalizedText[] getName() {
         return name;
     }
 
-    public void setName(List<LocalizedText> name) {
+    public void setName(LocalizedText[] name) {
         this.name = name;
     }
 
@@ -90,11 +88,11 @@ public class TaskDefinition {
         this.customAttributes = customAttributes;
     }
 
-    public List<Capabilities> getCapabilities() {
+    public Capabilities[] getCapabilities() {
         return capabilities;
     }
 
-    public void setCapabilities(List<Capabilities> capabilities) {
+    public void setCapabilities(Capabilities[] capabilities) {
         this.capabilities = capabilities;
     }
 
