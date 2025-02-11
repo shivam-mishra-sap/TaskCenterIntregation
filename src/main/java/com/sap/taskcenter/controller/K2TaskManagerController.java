@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sap.taskcenter.model.Capabilities.Capabilities;
 import com.sap.taskcenter.model.Request.Action;
 import com.sap.taskcenter.model.Request.ActionPayload;
 import com.sap.taskcenter.model.TaskDefinitions.TaskDefinition;
@@ -42,13 +43,18 @@ public class K2TaskManagerController {
         return k2TaskManagerService.getTaskDefinitions();
     }
 
+    @GetMapping("/capabilities")
+    public Map<String, List<Capabilities>> getCapabilities() {
+        return k2TaskManagerService.getCapabilities();
+    }
+
     @PostMapping("/tasks/{taskUrn}/action")
     public Map<String, List<Task>> updateTask(@PathVariable("taskUrn") String taskUrn,
             @RequestParam("languages") String languages,
             @RequestHeader("Accept-Language") String acceptLanguage,
             @RequestBody Action action) {
 
-        ActionPayload actionPayload = new ActionPayload("action","action","action",null);
+        ActionPayload actionPayload = new ActionPayload("action", "action", "action", null);
 
         return k2TaskManagerService.sendActionRequest(actionPayload);
 

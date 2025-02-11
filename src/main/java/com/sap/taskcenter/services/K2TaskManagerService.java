@@ -1,5 +1,8 @@
 package com.sap.taskcenter.services;
 
+import java.security.DrbgParameters.Capability;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +16,7 @@ import com.sap.taskcenter.model.Response.ApiResponse;
 import com.sap.taskcenter.model.TaskDefinitions.TaskDefinition;
 import com.sap.taskcenter.model.Tasks.Task;
 import com.sap.taskcenter.services.ModelMappingServices.K2MappingService;
+import com.sap.taskcenter.model.Capabilities.Capabilities;
 
 @Service
 public class K2TaskManagerService {
@@ -73,6 +77,23 @@ public class K2TaskManagerService {
 
         return k2MappingService.mapK2ResponseToTask(response.getValue());
 
+    }
+
+    public Map<String, List<Capabilities>> getCapabilities() {
+
+        HashMap<String, List<Capabilities>> response = new HashMap<>();
+
+        List<Capabilities> list = new ArrayList<>();
+        list.add(new Capabilities("tasks.pull", "true"));
+        list.add(new Capabilities("taskDefinitions.pull", "true"));
+        list.add(new Capabilities("tasks.push", "false"));
+        list.add(new Capabilities("substitutions", "false"));
+        list.add(new Capabilities("user.existence", "false"));
+        list.add(new Capabilities("global.operations", "false"));
+
+        response.put("value", list);
+
+        return response;
     }
 
 }

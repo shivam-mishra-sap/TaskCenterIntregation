@@ -4,19 +4,19 @@ import com.sap.taskcenter.model.TaskDefinitions.Enums.Name;
 
 public class Capabilities {
 
-    private Name name;
+    private String name;
     private boolean value;
 
     public Capabilities(Name name, boolean value) {
-        this.name = name;
+        this.name = name.getFormattedName();
         this.value = value;
     }
 
-    public Name getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(Name name) {
+    public void setName(String name) {
         this.name = name;
     }
 

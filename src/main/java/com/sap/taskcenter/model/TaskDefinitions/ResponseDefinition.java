@@ -14,15 +14,13 @@ public class ResponseDefinition {
     private CommentRequired commentRequired;
     private ReasonRequired reasonRequired;
     private List<ReasonDefinition> possibleReasons;
-    private Capabilities capabilities;
-
-    
+    private Capabilities[] capabilities;
 
     public ResponseDefinition(String code, LocalizedText[] name, Nature nature,
             CommentRequired commentRequired,
             ReasonRequired reasonRequired,
             List<ReasonDefinition> possibleReasons,
-            Capabilities capabilities) {
+            Capabilities[] capabilities) {
         this.code = code;
         this.name = name;
         this.nature = nature;
@@ -80,11 +78,11 @@ public class ResponseDefinition {
         this.possibleReasons = possibleReasons;
     }
 
-    public Capabilities getCapabilities() {
+    public Capabilities[] getCapabilities() {
         return capabilities;
     }
 
-    public void setCapabilities(Capabilities capabilities) {
+    public void setCapabilities(Capabilities[] capabilities) {
         this.capabilities = capabilities;
     }
 

@@ -1,6 +1,9 @@
 package com.sap.taskcenter.services.ModelMappingServices;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,34 +36,52 @@ public class K2MappingService {
 
         List<Task> taskList = customResponseList.stream()
                 .map(source -> {
+
                     Task task = new Task();
-                    task.setTenantId(source.getApprovableId());
-                    task.setApplicationInstanceId(source.getApprovableId());
-                    task.setCommentsCount(source.getChangeSequenceId());
 
-                    // Testing
                     if (source.getChangeSequenceId() == 1) {
-                        task.setUrn("URNTest");
-                        task.setApplicationId("ApplicationIdTest");
-                        task.setApplicationInstanceId("ApplicationInstanceIdTest");
-                        task.setTenantId("TenantIdTest");
-                        task.setLocalId("LocalIdTest");
-                        task.setDefinitionId("Test");
-                        task.setStatus("READY");
-                        task.setCreatedAt("2025-01-25T10:00:01.000Z");
-                        task.setModifiedAt("2025-01-26T10:00:01.000Z");
 
-                        List<LocalizedText> localizedTextList = new ArrayList<>();
-                        localizedTextList.add(new LocalizedText("EN-US", "Task1234", true));
-                        task.setSubject(localizedTextList);
+                        task.setApplicationId("ApplicationId" + "_" + source.getChangeSequenceId());
+                        task.setApplicationInstanceId("ApplicationInstanceId" + "_" + source.getChangeSequenceId());
+                        task.setTenantId("TenantId" + "_" + source.getChangeSequenceId());
+                        task.setLocalId("LocalId" + "_" + source.getChangeSequenceId());
+                        task.setUrn("urn" + ":" + "sap.odm.bpm.task" + ":" + task.getApplicationId() + ":"
+                                + task.getApplicationInstanceId() + ":" + task.getTenantId() + ":" + task.getLocalId());
+
+                        task.setDefinitionId(
+                                "urn" + ":" + "sap.odm.bpm.taskdefinition" + ":" + task.getApplicationId() + ":"
+                                        + task.getApplicationInstanceId() + ":" + task.getTenantId() + ":"
+                                        + task.getLocalId());
+
+                        task.setStatus("READY");
+
+                        // Get current time minus 10 minutes
+                        Instant createdAt = Instant.now().minus(10 * source.getChangeSequenceId(), ChronoUnit.MINUTES);
+                        Instant modifiedAt = Instant.now().minus(5 * source.getChangeSequenceId(), ChronoUnit.MINUTES);
+
+                        task.setCreatedAt(createdAt.toString());
+                        task.setModifiedAt(modifiedAt.toString());
+                        task.setCreatedBy("b0dc79c5-2b1a-4e86-92df-51ace1af7340");
+                        task.setModifiedBy("b0dc79c5-2b1a-4e86-92df-51ace1af7340");
 
                         task.setProcessor("b0dc79c5-2b1a-4e86-92df-51ace1af7340");
 
-                        List<String> recipientUsers = new ArrayList<>();
-                        recipientUsers.add("b0dc79c5-2b1a-4e86-92df-51ace1af7340");
-                        task.setRecipientUsers(recipientUsers);
+                        List<LocalizedText> localizedTextList = new ArrayList<>();
+                        localizedTextList
+                                .add(new LocalizedText("en-US", "New Laptop Lenovo Yoga (Model : " + source.getChangeSequenceId()*10 + ")", true));
+                        task.setSubject(localizedTextList);
+
+                        task.setPriority("VERY_HIGH");
+
+                        task.setCommentsCount(source.getChangeSequenceId()*10);
+
+                        task.setValidResponseCodes(new ArrayList<>(Arrays.asList("approve","deny")));
+
+                        task.setValidActionCodes(new ArrayList<>(Arrays.asList("increasePrio","extendETA")));
+
+                        task.setRecipientUsers(new ArrayList<>(Arrays.asList("b0dc79c5-2b1a-4e86-92df-51ace1af7340")));
+
                     }
-                    // Testing
 
                     return task;
                 })
@@ -75,29 +96,44 @@ public class K2MappingService {
 
         List<TaskDefinition> taskDefinationList = customResponseList.stream()
                 .map(source -> {
-                    
+
                     TaskDefinition taskDefination = new TaskDefinition();
 
-                    // Testing
                     if (source.getChangeSequenceId() == 1) {
-                        taskDefination.setUrn("urn:sap.odm.bpm.taskdefinition:s4hana:ab1:100: TS01800262_WS01800202_0000000009");
-                        taskDefination.setApplicationId("s4hana");
-                        taskDefination.setApplicationInstanceId("ab1");
-                        taskDefination.setTenantId("1000");
-                        taskDefination.setLocalId("TS01800262_WS01800202_0000000009");
 
-                        LocalizedText[] localizedTextArray = new LocalizedText[10];
+                        taskDefination.setApplicationId("ApplicationId" + "_" + source.getChangeSequenceId());
+                        taskDefination
+                                .setApplicationInstanceId("ApplicationInstanceId" + "_" + source.getChangeSequenceId());
+                        taskDefination.setTenantId("TenantId" + "_" + source.getChangeSequenceId());
+                        taskDefination.setLocalId("LocalId" + "_" + source.getChangeSequenceId());
+                        taskDefination.setUrn(
+                                "urn" + ":" + "sap.odm.bpm.taskdefinition" + ":" + taskDefination.getApplicationId()
+                                        + ":"
+                                        + taskDefination.getApplicationInstanceId() + ":" + taskDefination.getTenantId()
+                                        + ":" + taskDefination.getLocalId());
+
+                        LocalizedText[] localizedTextArray = new LocalizedText[1];
                         localizedTextArray[0] = new LocalizedText("en-US", "Release of Debit Memo Request", true);
                         taskDefination.setName(localizedTextArray);
 
-                        ResponseDefinition responseDefinition1 = new ResponseDefinition("0001", localizedTextArray, Nature.NEUTRAL, 
-                        CommentRequired.OPTIONAL, ReasonRequired.UNSUPPORTED, new ArrayList<>(), new Capabilities(Name.TASKS_DESCRIPTION,true));
+                        Capabilities[] capabilitiesArray1 = new Capabilities[1];
+                        capabilitiesArray1[0] = new Capabilities(Name.TASKS_BULK_OPERATIONS, true);
 
-                        ResponseDefinition responseDefinition2 = new ResponseDefinition("0002", localizedTextArray, Nature.POSITIVE, 
-                        CommentRequired.OPTIONAL, ReasonRequired.UNSUPPORTED, new ArrayList<>(), new Capabilities(Name.TASKS_DESCRIPTION,true));
+                        ResponseDefinition responseDefinition1 = new ResponseDefinition("0001",
+                                new LocalizedText[] { new LocalizedText("en-US", "Release", true) }, Nature.POSITIVE,
+                                CommentRequired.OPTIONAL, ReasonRequired.UNSUPPORTED, new ArrayList<>(),
+                                capabilitiesArray1);
 
-                        ResponseDefinition responseDefinition3 = new ResponseDefinition("0003", localizedTextArray, Nature.NEGATIVE, 
-                        CommentRequired.OPTIONAL, ReasonRequired.UNSUPPORTED, new ArrayList<>(), new Capabilities(Name.TASKS_DESCRIPTION,true));
+                        ResponseDefinition responseDefinition2 = new ResponseDefinition("0002",
+                                new LocalizedText[] { new LocalizedText("en-US", "Reject", true) }, Nature.NEUTRAL,
+                                CommentRequired.OPTIONAL, ReasonRequired.UNSUPPORTED, new ArrayList<>(),
+                                capabilitiesArray1);
+
+                        ResponseDefinition responseDefinition3 = new ResponseDefinition("0003",
+                                new LocalizedText[] { new LocalizedText("en-US", "Request Rework", true) },
+                                Nature.NEGATIVE,
+                                CommentRequired.OPTIONAL, ReasonRequired.UNSUPPORTED, new ArrayList<>(),
+                                capabilitiesArray1);
 
                         List<ResponseDefinition> possibleResponses = new ArrayList<>();
                         possibleResponses.add(responseDefinition1);
@@ -106,19 +142,30 @@ public class K2MappingService {
                         taskDefination.setPossibleResponses(possibleResponses);
 
                         List<CustomAttributeDefinition> customAttributes = new ArrayList<>();
-                        customAttributes.add(new CustomAttributeDefinition("CREATEDBY","STRING","",localizedTextArray,0));
-                        customAttributes.add(new CustomAttributeDefinition("CREATEDBYNAME","STRING","",localizedTextArray,0));
-                        customAttributes.add(new CustomAttributeDefinition("SOLDTOPARTY","STRING","",localizedTextArray,0));
-                        customAttributes.add(new CustomAttributeDefinition("TOTAL_NETAMOUNT","FLOAT","",localizedTextArray,0));
-                        customAttributes.add(new CustomAttributeDefinition("TRANSACTION_CURRENCY","STRING","",localizedTextArray,0));
+
+                        customAttributes.add(new CustomAttributeDefinition("CREATEDBY", "STRING", "",
+                                new LocalizedText[] { new LocalizedText("en-US", "Document Created By", true) }, 0));
+                        customAttributes.add(new CustomAttributeDefinition("CREATEDBYNAME", "STRING", "",
+                                new LocalizedText[] { new LocalizedText("en-US", "Document Created By (Name)", true) },
+                                0));
+                        customAttributes.add(new CustomAttributeDefinition("SOLDTOPARTY", "STRING", "",
+                                new LocalizedText[] { new LocalizedText("en-US", "Sold-to Party", true) }, 0));
+                        customAttributes.add(new CustomAttributeDefinition("SOLDTOPARTYNAME", "STRING", "",
+                                new LocalizedText[] { new LocalizedText("en-US", "Sold-to Party (Name)", true) }, 0));
+                        customAttributes.add(new CustomAttributeDefinition("TOTAL_NETAMOUNT", "FLOAT", "",
+                                new LocalizedText[] { new LocalizedText("en-US", "Net Value", true) }, 0));
+                        customAttributes.add(new CustomAttributeDefinition("TRANSATION_CURRENCY", "STRING", "",
+                                new LocalizedText[] { new LocalizedText("en-US", "Transaction Currency", true) }, 0));
+                        taskDefination.setCustomAttributes(customAttributes);
 
                         Capabilities[] capabilitiesArray = new Capabilities[6];
-                        capabilitiesArray[0] = new Capabilities(Name.ATTACHMENTS,true);
-                        capabilitiesArray[1] = new Capabilities(Name.ATTACHMENTS_CREATE,true);
-                        capabilitiesArray[2] = new Capabilities(Name.COMMENTS,true);
-                        capabilitiesArray[3] = new Capabilities(Name.COMMENTS_CREATE,true);
-                        capabilitiesArray[4] = new Capabilities(Name.TASKS_DESCRIPTION,true);
-                        capabilitiesArray[5] = new Capabilities(Name.COMMENTS,true);
+                        capabilitiesArray[0] = new Capabilities(Name.ATTACHMENTS, true);
+                        capabilitiesArray[1] = new Capabilities(Name.ATTACHMENTS_CREATE, true);
+                        capabilitiesArray[2] = new Capabilities(Name.COMMENTS, true);
+                        capabilitiesArray[3] = new Capabilities(Name.COMMENTS_CREATE, true);
+                        capabilitiesArray[4] = new Capabilities(Name.TASKS_DESCRIPTION, true);
+                        capabilitiesArray[5] = new Capabilities(Name.SUBSTITUTIONS, true);
+                        taskDefination.setCapabilities(capabilitiesArray);
 
                         IFrameUISettings iframeSettings = new IFrameUISettings(true, true, true, "");
                         WebUISettings webUISettings = new WebUISettings("IFrame", iframeSettings);
@@ -129,11 +176,12 @@ public class K2MappingService {
                         MobileUISettings mobileUISettings = new MobileUISettings("DataDriven", dataDrivenUISettings);
 
                         // Create TaskDetailsSettings with both WebUI and MobileUI settings
-                        TaskDetailsSettings taskDetailsSettings = new TaskDetailsSettings(webUISettings, mobileUISettings);
+                        TaskDetailsSettings taskDetailsSettings = new TaskDetailsSettings(webUISettings,
+                                mobileUISettings);
                         taskDefination.setTaskDetailsSettings(taskDetailsSettings);
 
                     }
-                    
+
                     return taskDefination;
                 })
                 .collect(Collectors.toList());
