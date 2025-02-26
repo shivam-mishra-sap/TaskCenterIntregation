@@ -1,7 +1,6 @@
 package com.sap.taskcenter.model.TaskDefinitions;
 
 import java.util.Arrays;
-import java.util.List;
 
 public class CustomAttributeDefinition {
 
@@ -64,7 +63,5 @@ public class CustomAttributeDefinition {
     public void setRank(int rank) {
         this.rank = rank;
     }
-
-    
 
 }

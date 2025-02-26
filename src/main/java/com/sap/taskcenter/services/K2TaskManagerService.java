@@ -1,22 +1,21 @@
 package com.sap.taskcenter.services;
 
-import java.security.DrbgParameters.Capability;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.sap.taskcenter.model.Request.ActionPayload;
-import com.sap.taskcenter.model.Response.ApiResponse;
+import com.sap.taskcenter.model.Capabilities.Capabilities;
+import com.sap.taskcenter.model.Request.SourcingProject;
+import com.sap.taskcenter.model.Response.SourcingProjectsListResponse;
 import com.sap.taskcenter.model.TaskDefinitions.TaskDefinition;
 import com.sap.taskcenter.model.Tasks.Task;
 import com.sap.taskcenter.services.ModelMappingServices.K2MappingService;
-import com.sap.taskcenter.model.Capabilities.Capabilities;
 
 @Service
 public class K2TaskManagerService {
@@ -27,55 +26,58 @@ public class K2TaskManagerService {
     @Autowired
     private K2MappingService k2MappingService;
 
+    private String realm;
+
+    @Value("${user}")
+    private String user;
+
+    @Value("${passwordAdapter}")
+    private String passwordAdapter;
+
+    String filter = "((createDateFrom gt 1736403239000 and createDateTo lt 1740391589000))";
+    String projectId = "WS3273973";
+
     public Map<String, List<Task>> getTasks() {
 
-        ApiResponse response = webClient.get().uri("/changes?realm=123/")
+        SourcingProjectsListResponse response = webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/prod/projects")
+                        .queryParam("$filter", filter)
+                        .queryParam("realm", realm)
+                        .queryParam("user", user)
+                        .queryParam("passwordAdapter", passwordAdapter)
+                        .build(true))
                 .retrieve()
-                .bodyToMono(ApiResponse.class)
+                .bodyToMono(SourcingProjectsListResponse.class)
                 .block();
 
         if (response == null) {
             throw new RuntimeException("Failed to fetch response from K2 System");
         }
 
-        return k2MappingService.mapK2ResponseToTask(response.getValue());
+        return k2MappingService.mapK2ResponseToTask(response.getPayload());
 
     }
 
     public Map<String, List<TaskDefinition>> getTaskDefinitions() {
 
-        ApiResponse response = webClient.get().uri("/changes?realm=123/")
+        SourcingProjectsListResponse response = webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/prod/projects")
+                        .queryParam("$filter", filter)
+                        .queryParam("realm", realm)
+                        .queryParam("user", user)
+                        .queryParam("passwordAdapter", passwordAdapter)
+                        .build(true))
                 .retrieve()
-                .bodyToMono(ApiResponse.class)
+                .bodyToMono(SourcingProjectsListResponse.class)
                 .block();
 
         if (response == null) {
             throw new RuntimeException("Failed to fetch response from K2 System");
         }
 
-        return k2MappingService.mapK2ResponseToTaskDefination(response.getValue());
-
-    }
-
-    public Map<String, List<Task>> sendActionRequest(ActionPayload actionPayload) {
-
-        ApiResponse response = webClient.post()
-                .uri("/action?")
-                // .header("Authorization"," ")
-                // .header("APIKey", " ")
-                .header("realm", "coe-india-t")
-                .header("user", "TEST3PUSER1")
-                .header("passwordadapter", "ThirdPartyUser")
-                .body(BodyInserters.fromValue(actionPayload))
-                .retrieve()
-                .bodyToMono(ApiResponse.class)
-                .block();
-
-        if (response == null) {
-            throw new RuntimeException("Failed to fetch response from K2 System, Error : ");
-        }
-
-        return k2MappingService.mapK2ResponseToTask(response.getValue());
+        return k2MappingService.mapK2ResponseToTaskDefination(response.getPayload());
 
     }
 
@@ -94,6 +96,29 @@ public class K2TaskManagerService {
         response.put("value", list);
 
         return response;
+    }
+
+    public Task sendTaskDetails(SourcingProject sourcingProject) {
+
+        String response = webClient.put()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/sandbox/projects/" + projectId)
+                        .queryParam("realm", realm)
+                        .queryParam("user", user)
+                        .queryParam("passwordAdapter", passwordAdapter)
+                        .build(true))
+                .bodyValue(sourcingProject)
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+
+        if (response == null) {
+            throw new RuntimeException("Failed to fetch response from K2 System");
+        }
+
+        System.out.println(response.toString());
+
+        return k2MappingService.mapK2ResponseToTask(response);
     }
 
 }

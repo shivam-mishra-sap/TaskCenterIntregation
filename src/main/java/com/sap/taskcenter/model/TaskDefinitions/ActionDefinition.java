@@ -32,6 +32,30 @@ public class ActionDefinition {
         this.name = name;
     }
 
+    public Nature getNature() {
+        return nature;
+    }
+
+    public void setNature(Nature nature) {
+        this.nature = nature;
+    }
+
+    public CommentRequired getCommentRequired() {
+        return commentRequired;
+    }
+
+    public void setCommentRequired(CommentRequired commentRequired) {
+        this.commentRequired = commentRequired;
+    }
+
+    public ReasonRequired getReasonRequired() {
+        return reasonRequired;
+    }
+
+    public void setReasonRequired(ReasonRequired reasonRequired) {
+        this.reasonRequired = reasonRequired;
+    }
+
     public List<ReasonDefinition> getPossibleReasons() {
         return possibleReasons;
     }
@@ -50,7 +74,9 @@ public class ActionDefinition {
 
     @Override
     public String toString() {
-        return "ActionDefinition [code=" + code + ", name=" + name + ", possibleReasons=" + possibleReasons
+        return "ActionDefinition [code=" + code + ", name=" + name + ", nature=" + nature + ", commentRequired="
+                + commentRequired + ", reasonRequired=" + reasonRequired + ", possibleReasons=" + possibleReasons
                 + ", capabilities=" + capabilities + "]";
     }
+
 }

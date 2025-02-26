@@ -11,12 +11,18 @@ public class WebClientConfig {
     @Value("${k2.base.url}")
     private String k2BaseUrl;
 
+    @Value("${apiKey}")
+    private String apiKey;
+
+    @Value("${authorizationToken}")
+    private String authorizationToken;
+
     @Bean
     public WebClient webClient() {
         return WebClient.builder()
                 .baseUrl(k2BaseUrl)
-                .defaultHeader("APIKey", "2yv1cgp66ZASiJS33Vqwaz7jUJIG5dbG")
+                .defaultHeader("Authorization", "Bearer " + authorizationToken)
+                .defaultHeader("apiKey", apiKey)
                 .build();
     }
-
 }

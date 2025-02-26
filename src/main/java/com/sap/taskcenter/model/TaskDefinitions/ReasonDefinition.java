@@ -1,7 +1,5 @@
 package com.sap.taskcenter.model.TaskDefinitions;
 
-import java.util.List;
-
 public class ReasonDefinition {
     private String code;
     private LocalizedText[] name;

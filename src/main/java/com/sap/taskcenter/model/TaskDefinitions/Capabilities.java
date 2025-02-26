@@ -28,4 +28,9 @@ public class Capabilities {
         this.value = value;
     }
 
+    @Override
+    public String toString() {
+        return "Capabilities [name=" + name + ", value=" + value + "]";
+    }
+
 }

@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sap.taskcenter.model.Capabilities.Capabilities;
 import com.sap.taskcenter.model.Request.Action;
-import com.sap.taskcenter.model.Request.ActionPayload;
+import com.sap.taskcenter.model.Request.SourcingProject;
+import com.sap.taskcenter.model.Request.SourcingProject.ActualSaving;
+import com.sap.taskcenter.model.Request.SourcingProject.Payload;
 import com.sap.taskcenter.model.TaskDefinitions.TaskDefinition;
 import com.sap.taskcenter.model.Tasks.Task;
 import com.sap.taskcenter.services.K2TaskManagerService;
@@ -49,15 +51,25 @@ public class K2TaskManagerController {
     }
 
     @PostMapping("/tasks/{taskUrn}/action")
-    public Map<String, List<Task>> updateTask(@PathVariable("taskUrn") String taskUrn,
+    public Task updateTask(@PathVariable("taskUrn") String taskUrn,
             @RequestParam("languages") String languages,
             @RequestHeader("Accept-Language") String acceptLanguage,
             @RequestBody Action action) {
 
-        ActionPayload actionPayload = new ActionPayload("action", "action", "action", null);
+        ActualSaving actualSaving = new ActualSaving();
+        actualSaving.setAmount(10000);
+        actualSaving.setCurrency("INR");
 
-        return k2TaskManagerService.sendActionRequest(actionPayload);
+        Payload payload = new Payload();
+        payload.setActualSaving(actualSaving);
+        payload.setDepartment("Task is updated");
 
+        SourcingProject sourcingProject = new SourcingProject();
+        sourcingProject.setPayload(payload);
+
+        System.out.println(sourcingProject.toString());
+
+        return k2TaskManagerService.sendTaskDetails(sourcingProject);
     }
 
 }

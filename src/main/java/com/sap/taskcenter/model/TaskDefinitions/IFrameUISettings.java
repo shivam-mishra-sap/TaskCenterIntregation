@@ -8,7 +8,8 @@ public class IFrameUISettings {
     private String urlParams;
 
     // Constructor
-    public IFrameUISettings(boolean enableActions, boolean enableAttachments, boolean enableComments, String urlParams) {
+    public IFrameUISettings(boolean enableActions, boolean enableAttachments, boolean enableComments,
+            String urlParams) {
         this.enableActions = enableActions;
         this.enableAttachments = enableAttachments;
         this.enableComments = enableComments;
@@ -50,7 +51,8 @@ public class IFrameUISettings {
 
     // Method to convert the settings to a Map (or JSON)
     public String toJSON() {
-        return String.format("{\"enableActions\": %b, \"enableAttachments\": %b, \"enableComments\": %b, \"urlParams\": \"%s\"}",
+        return String.format(
+                "{\"enableActions\": %b, \"enableAttachments\": %b, \"enableComments\": %b, \"urlParams\": \"%s\"}",
                 enableActions, enableAttachments, enableComments, urlParams);
     }
 }
